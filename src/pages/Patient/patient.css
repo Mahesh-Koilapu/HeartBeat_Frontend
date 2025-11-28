@@ -1,0 +1,108 @@
+@import '../dashboard-base.css';
+
+.dashboard-container.patient-theme {
+  background: #101225;
+}
+
+.dashboard-container.patient-theme .dashboard-sidebar {
+  background: #171a37;
+}
+
+.dashboard-container.patient-theme .dashboard-brand h2 {
+  color: #f472b6;
+}
+
+.dashboard-container.patient-theme .card {
+  border-color: rgba(244, 114, 182, 0.15);
+}
+
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-end;
+}
+
+.filter-bar label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.filter-bar input,
+.filter-bar select {
+  background: rgba(30, 32, 56, 0.85);
+  border: 1px solid rgba(244, 114, 182, 0.25);
+  color: #fce7f3;
+  border-radius: 10px;
+  padding: 0.6rem 0.9rem;
+}
+
+.list-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.doctor-card {
+  background: rgba(30, 32, 56, 0.9);
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 1px solid rgba(244, 114, 182, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.doctor-card h4 {
+  color: #f472b6;
+  margin: 0;
+}
+
+.doctor-card button {
+  align-self: flex-start;
+  background: linear-gradient(120deg, #f472b6, #ec4899);
+  border: none;
+  border-radius: 10px;
+  padding: 0.6rem 1rem;
+  color: #1f1538;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.timeline {
+  display: grid;
+  gap: 1rem;
+}
+
+.timeline-item {
+  background: rgba(30, 32, 56, 0.85);
+  border-radius: 14px;
+  padding: 1rem 1.25rem;
+  border: 1px solid rgba(244, 114, 182, 0.2);
+}
+
+.timeline-item h4 {
+  margin-bottom: 0.4rem;
+  color: #f472b6;
+}
+
+.stat-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.tag.success {
+  background: rgba(74, 222, 128, 0.2);
+  color: #4ade80;
+}

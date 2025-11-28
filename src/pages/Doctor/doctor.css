@@ -1,0 +1,67 @@
+@import '../dashboard-base.css';
+
+.dashboard-container.doctor-theme {
+  background: #0b1120;
+}
+
+.dashboard-container.doctor-theme .dashboard-sidebar {
+  background: #0b192f;
+}
+
+.dashboard-container.doctor-theme .dashboard-brand h2 {
+  color: #22d3ee;
+}
+
+.dashboard-container.doctor-theme .card {
+  border-color: rgba(45, 212, 191, 0.15);
+}
+
+.timeline {
+  display: grid;
+  gap: 1rem;
+}
+
+.timeline-item {
+  background: rgba(15, 23, 42, 0.9);
+  border-radius: 14px;
+  padding: 1rem 1.25rem;
+  border: 1px solid rgba(148, 163, 184, 0.15);
+}
+
+.timeline-item h4 {
+  margin-bottom: 0.4rem;
+  color: #67e8f9;
+}
+
+.availability-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.slot-card {
+  background: rgba(14, 23, 42, 0.85);
+  border-radius: 12px;
+  padding: 1rem;
+  border: 1px solid rgba(56, 189, 248, 0.15);
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.tag.success {
+  background: rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+}
+
+.tag.warn {
+  background: rgba(250, 204, 21, 0.2);
+  color: #facc15;
+}
