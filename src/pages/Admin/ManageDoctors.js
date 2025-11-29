@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react';
 import useFetch from '../../hooks/useFetch';
 import client from '../../api/client';
+import SPECIALIZATIONS from '../../constants/specializations';
+import { formatDoctorId } from '../../utils/formatting';
 
 const defaultDoctor = {
   name: '',
@@ -16,7 +18,7 @@ const ManageDoctors = () => {
   const { data: doctors, loading, error, execute, setData } = useFetch('/admin/doctors');
   const [form, setForm] = useState(defaultDoctor);
   const [submitting, setSubmitting] = useState(false);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState(null);
 
   const activeCount = useMemo(() => doctors?.filter((doc) => doc.isActive).length || 0, [doctors]);
 
@@ -32,14 +34,14 @@ const ManageDoctors = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
-    setMessage('');
+    setMessage(null);
     try {
       const { data } = await client.post('/admin/doctors', form);
       setData((prev) => (prev ? [data.doctor, ...prev] : [data.doctor]));
-      setMessage('Doctor added successfully');
+      setMessage({ type: 'success', text: 'Doctor added successfully.' });
       resetForm();
     } catch (err) {
-      setMessage(err.response?.data?.message || 'Failed to add doctor');
+      setMessage({ type: 'error', text: err.response?.data?.message || 'Failed to add doctor.' });
     } finally {
       setSubmitting(false);
     }
@@ -65,87 +67,118 @@ const ManageDoctors = () => {
   };
 
   return (
-    <div className="dashboard-grid grid-2">
-      <div className="card">
-        <h3>Add Doctor</h3>
-        {message && <p>{message}</p>}
+    <div className="manage-doctors-layout">
+      <section className="card add-doctor-section">
+        <header className="section-header">
+          <div>
+            <h3>Add Doctor</h3>
+            <p className="muted">Create a new doctor account and profile</p>
+          </div>
+        </header>
+        {message && <p className={`form-message ${message.type}`}>{message.text}</p>}
         <form onSubmit={handleSubmit} className="form-grid">
           <label>
-            Name
+            <span>Name</span>
             <input name="name" value={form.name} onChange={handleChange} required />
           </label>
           <label>
-            Email
+            <span>Email</span>
             <input type="email" name="email" value={form.email} onChange={handleChange} required />
           </label>
           <label>
-            Password
+            <span>Password</span>
             <input type="password" name="password" value={form.password} onChange={handleChange} required />
           </label>
           <label>
-            Specialization
-            <input name="specialization" value={form.specialization} onChange={handleChange} required />
+            <span>Specialization</span>
+            <select name="specialization" value={form.specialization} onChange={handleChange} required>
+              <option value="">Select specialization</option>
+              {SPECIALIZATIONS.map((item) => (
+                <option key={item} value={item}>
+                  {item}
+                </option>
+              ))}
+            </select>
           </label>
           <label>
-            Experience (years)
+            <span>Experience (years)</span>
             <input type="number" name="experience" value={form.experience} onChange={handleChange} min="0" />
           </label>
           <label>
-            Education
+            <span>Education</span>
             <input name="education" value={form.education} onChange={handleChange} />
           </label>
           <label className="full">
-            Description
+            <span>Description</span>
             <textarea name="description" value={form.description} onChange={handleChange} rows={3} />
           </label>
-          <div className="actions">
+          <div className="actions full">
             <button type="submit" className="primary" disabled={submitting}>
-              {submitting ? 'Saving...' : 'Create Doctor'}
+              {submitting ? 'Adding…' : 'Create Doctor'}
             </button>
-            <button type="button" onClick={resetForm} disabled={submitting}>
+            <button type="button" onClick={resetForm}>
               Reset
             </button>
           </div>
         </form>
-      </div>
-      <div className="card">
-        <h3>Doctors ({doctors?.length || 0}) · Active {activeCount}</h3>
-        {loading && <p>Loading doctors...</p>}
-        {error && <p>Unable to load doctors.</p>}
+      </section>
+
+      <section className="card doctors-list-section">
+        <header className="section-header">
+          <h3>Doctors Directory</h3>
+          <div className="header-badges">
+            <span className="badge">Total {doctors?.length || 0}</span>
+            <span className="badge active">Active {activeCount}</span>
+          </div>
+        </header>
+        {loading && <div className="loading-state">Loading doctors...</div>}
+        {error && <div className="error-state">Unable to load doctors.</div>}
         {!loading && !error && (
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Specialization</th>
-                <th>Status</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {doctors?.map((doctor) => (
-                <tr key={doctor._id}>
-                  <td>{doctor.name}</td>
-                  <td>{doctor.profile?.specialization || '—'}</td>
-                  <td>
-                    <span className={`badge ${doctor.isActive ? 'active' : 'inactive'}`}>
-                      {doctor.isActive ? 'Active' : 'Inactive'}
-                    </span>
-                  </td>
-                  <td className="actions">
-                    <button onClick={() => toggleStatus(doctor._id, doctor.isActive)}>
-                      {doctor.isActive ? 'Deactivate' : 'Activate'}
-                    </button>
-                    <button className="danger" onClick={() => removeDoctor(doctor._id)}>
-                      Delete
-                    </button>
-                  </td>
+          <div className="table-wrapper">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Doctor ID</th>
+                  <th>Name</th>
+                  <th>Specialization</th>
+                  <th>Status</th>
+                  <th>Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {doctors?.map((doctor) => (
+                  <tr key={doctor._id}>
+                    <td>
+                      <code title={doctor._id}>{formatDoctorId(doctor._id)}</code>
+                    </td>
+                    <td>
+                      <div className="doctor-name">
+                        <strong>{doctor.name}</strong>
+                        <br />
+                        <small className="muted">{doctor.email}</small>
+                      </div>
+                    </td>
+                    <td>{doctor.profile?.specialization || '—'}</td>
+                    <td>
+                      <span className={`badge ${doctor.isActive ? 'active' : 'inactive'}`}>
+                        {doctor.isActive ? 'Active' : 'Inactive'}
+                      </span>
+                    </td>
+                    <td className="actions">
+                      <button onClick={() => toggleStatus(doctor._id, doctor.isActive)}>
+                        {doctor.isActive ? 'Deactivate' : 'Activate'}
+                      </button>
+                      <button onClick={() => removeDoctor(doctor._id)} className="danger">
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
-      </div>
+      </section>
     </div>
   );
 };

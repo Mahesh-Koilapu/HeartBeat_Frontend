@@ -5,6 +5,7 @@ const roleHome = {
   admin: '/admin',
   doctor: '/doctor',
   patient: '/patient',
+  user: '/patient',
 };
 
 const RoleRoute = ({ allowedRoles }) => {
