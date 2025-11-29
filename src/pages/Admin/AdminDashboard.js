@@ -41,7 +41,7 @@ const AdminDashboard = () => {
           <div className="admin-sidebar__logo">❤️</div>
           <div className="admin-sidebar__title">
             <h2>Heart Beat</h2>
-            <p>Admin Console</p>
+            <p>Admin console</p>
           </div>
         </div>
 
