@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  }, [updateUser]);
+  }, []);
 
   useEffect(() => {
     fetchProfile();
