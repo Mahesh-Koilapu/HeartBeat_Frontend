@@ -15,10 +15,11 @@ const buildUserResponse = (user) => ({
 
 const sendAuthToken = (res, user) => {
   const token = signToken({ id: user._id, role: user.role });
+  const isProd = process.env.NODE_ENV === 'production';
   const cookieOptions = {
     httpOnly: true,
-    sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
+    sameSite: isProd ? 'none' : 'lax',
+    secure: isProd,
     maxAge: 7 * 24 * 60 * 60 * 1000,
   };
   res.cookie('token', token, cookieOptions);
@@ -160,7 +161,12 @@ const getProfile = async (req, res) => {
 };
 
 const logout = async (_req, res) => {
-  res.clearCookie('token');
+  const isProd = process.env.NODE_ENV === 'production';
+  res.clearCookie('token', {
+    httpOnly: true,
+    sameSite: isProd ? 'none' : 'lax',
+    secure: isProd,
+  });
   res.json({ message: 'Logged out successfully' });
 };
 

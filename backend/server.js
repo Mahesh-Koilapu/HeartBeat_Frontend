@@ -18,12 +18,19 @@ const allowedOrigins = (process.env.CLIENT_ORIGINS || process.env.CLIENT_ORIGIN 
 
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      return callback(null, true);
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.warn(`CORS blocked for: ${origin}. Allowed origins are:`, allowedOrigins);
+      callback(null, false); // Return false instead of Error object
     }
-    return callback(new Error(`CORS blocked for origin: ${origin}`));
   },
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
 app.use(cookieParser());
